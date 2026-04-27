@@ -199,36 +199,54 @@ public class login extends javax.swing.JFrame {
     }//GEN-LAST:event_passwordActionPerformed
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
-        //variabel baru
     String userIn = username.getText();
     String passIn = new String(password.getPassword());
 
+   //login dengan guest
+    if (userIn.equalsIgnoreCase("guest")) {
+        Akun userAktif = new Akun(); 
+        
+        javax.swing.JOptionPane.showMessageDialog(this, "Masuk sebagai Tamu.");
+        
+        new dasboard().setVisible(true);
+        this.dispose();
+        return; 
+    }
+
+    //login user atau admin
     try {
-        // 1. Baca file akun.txt
         java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("src/akun/akun.txt"));
         String baris;
+        Akun userAktif = null; // Objek Polimorfisme
         boolean isFound = false;
 
-        // 2. Loop untuk mengecek setiap baris di file txt
         while ((baris = br.readLine()) != null) {
-            String[] data = baris.split(","); // Memisahkan username dan password
+            String[] data = baris.split(",");
             if (data[0].equals(userIn) && data[1].equals(passIn)) {
                 isFound = true;
+                
+                // Menentukan jenis objek berdasarkan role dari file
+                if (data[2].equalsIgnoreCase("Admin")) {
+                    userAktif = new Admin(data[0], data[1], data[2]);
+                } else {
+                    userAktif = new User(data[0], data[1], data[2]);
+                }
                 break;
             }
         }
         br.close();
 
-        // 3. Respon hasil pengecekan
-        if (isFound) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Login Berhasil!");
-            new dasboard().setVisible(true); // Pindah ke dashboard
+        if (isFound && userAktif != null) {
+            userAktif.tampilkanRole(); 
+            userAktif.infoAkses();    
+            userAktif.bukaDashboard(); 
+            
             this.dispose();
         } else {
             javax.swing.JOptionPane.showMessageDialog(this, "Username atau Password Salah!");
         }
     } catch (Exception e) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Akun tidak ditemukan! Silakan daftar dulu.");
+        javax.swing.JOptionPane.showMessageDialog(this, "File Database Bermasalah!");
     }
     }//GEN-LAST:event_loginActionPerformed
 

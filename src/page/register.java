@@ -199,23 +199,40 @@ public class register extends javax.swing.JFrame {
     }//GEN-LAST:event_passwordActionPerformed
 
     private void RegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterActionPerformed
-    String user = username.getText();
+String user = username.getText();
     String pass = new String(password.getPassword());
+    // Tambahkan variabel role default
+    String role = "User"; 
 
+    // Validasi input kosong
     if (user.isEmpty() || pass.isEmpty()) {
         javax.swing.JOptionPane.showMessageDialog(this, "Username dan Password tidak boleh kosong!");
         return;
     }
 
     try {
+        // 1. Proses penulisan ke file dengan format 3 kolom (User, Pass, Role)
         java.io.FileWriter fw = new java.io.FileWriter("src/akun/akun.txt", true);
-        fw.write(user + "," + pass + "\n");
+        
+        // Perhatikan bagian ini: ditambahkan variabel 'role'
+        fw.write(user + "," + pass + "," + role + "\n");
         fw.close();
 
+        // 2. Penerapan konsep Tugas 2: Instansiasi Objek dari Class yang baru dibuat
+        // Ini membuktikan bahwa setelah daftar, data langsung "dihidupkan" ke objek
+        Akun akunBaru = new User(user, pass, role);
+        
+        // Memanggil method override untuk memberikan sambutan
+        akunBaru.tampilkanRole();
+
         javax.swing.JOptionPane.showMessageDialog(this, "Registrasi Berhasil!");
+        
+        // Navigasi kembali ke login
         new login().setVisible(true);
         this.dispose();
+        
     } catch (Exception e) {
+        // Exception e menangkap error jika file gagal diakses
         javax.swing.JOptionPane.showMessageDialog(this, "Gagal simpan: " + e.getMessage());
     }
     }//GEN-LAST:event_RegisterActionPerformed

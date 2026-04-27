@@ -8,16 +8,45 @@ package page;
  *
  * @author 2RAH
  */
-public class dasboard extends javax.swing.JFrame {
+public class dasboard_admin extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(dasboard.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(dasboard_admin.class.getName());
 
     /**
      * Creates new form login
      */
-    public dasboard() {
+    
+    
+    public dasboard_admin(String namaAdmin) {
         initComponents();
+        admin_username.setText(namaAdmin); // Set nama admin ke label
+        tampilData();
     }
+    
+    public dasboard_admin() {
+        initComponents();
+  
+    }
+    
+    private void tampilData() {
+    javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) table_user.getModel();
+    model.setRowCount(0); // Reset tabel agar tidak duplikat
+
+    try {
+        java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader("src/akun/akun.txt"));
+        String baris;
+        int no = 1;
+        while ((baris = br.readLine()) != null) {
+            String[] data = baris.split(",");
+            // Menampilkan: No, Username, Password, Role
+            Object[] row = {no++, data[0], data[1], data[2]};
+            model.addRow(row);
+        }
+        br.close();
+    } catch (Exception e) {
+        System.out.println("Gagal baca data: " + e.getMessage());
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -30,25 +59,116 @@ public class dasboard extends javax.swing.JFrame {
 
         jLabel5 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        table_user = new javax.swing.JTable();
+        update = new javax.swing.JButton();
+        delete = new javax.swing.JButton();
+        old_password = new javax.swing.JTextField();
+        new_password = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        role = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        admin_username = new javax.swing.JLabel();
+        logout = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("WELCOME");
+        jLabel5.setText("WELCOME ADMIN");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/asset/background.jpg"))); // NOI18N
+
+        table_user.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "No", "Username", "Password", "Role"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        table_user.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_userMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(table_user);
+
+        update.setText("Update");
+        update.addActionListener(this::updateActionPerformed);
+
+        delete.setText("Delete");
+        delete.addActionListener(this::deleteActionPerformed);
+
+        old_password.addActionListener(this::old_passwordActionPerformed);
+
+        new_password.addActionListener(this::new_passwordActionPerformed);
+
+        jLabel1.setText("Password lama :");
+
+        jLabel3.setText("Password baru :");
+
+        role.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "user", "admin" }));
+        role.addActionListener(this::roleActionPerformed);
+
+        jLabel4.setText("role");
+
+        jLabel6.setText("admin :");
+
+        admin_username.setText("name");
+
+        logout.setText("Logout");
+        logout.addActionListener(this::logoutActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
-                .addContainerGap())
             .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1)
+                            .addComponent(old_password, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)
+                            .addComponent(new_password, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(role, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4)
+                            .addComponent(logout))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(admin_username)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(delete)
+                                .addGap(18, 18, 18)
+                                .addComponent(update)))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -56,12 +176,130 @@ public class dasboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 155, Short.MAX_VALUE)
-                .addGap(125, 125, 125))
+                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(admin_username))
+                .addGap(2, 2, 2)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(role, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addGap(2, 2, 2)
+                .addComponent(old_password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addGap(4, 4, 4)
+                .addComponent(new_password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(update)
+                    .addComponent(delete)
+                    .addComponent(logout)))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void new_passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_new_passwordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_new_passwordActionPerformed
+
+    private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
+    int selectedRow = table_user.getSelectedRow();
+    if (selectedRow == -1) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Pilih user yang mau dihapus!");
+        return;
+    }
+
+    String targetUser = table_user.getValueAt(selectedRow, 1).toString();
+    int confirm = javax.swing.JOptionPane.showConfirmDialog(this, "Hapus akun " + targetUser + "?", "Konfirmasi", javax.swing.JOptionPane.YES_NO_OPTION);
+
+    if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+        try {
+            java.util.List<String> semuaData = java.nio.file.Files.readAllLines(java.nio.file.Paths.get("src/akun/akun.txt"));
+            java.io.PrintWriter pw = new java.io.PrintWriter(new java.io.FileWriter("src/akun/akun.txt"));
+
+            for (String baris : semuaData) {
+                String[] d = baris.split(",");
+                if (!d[0].equals(targetUser)) { // Tulis semua KECUALI yang mau dihapus
+                    pw.println(baris);
+                }
+            }
+            pw.close();
+            tampilData(); // Refresh tabel
+            javax.swing.JOptionPane.showMessageDialog(this, "Akun Berhasil Dihapus!");
+        } catch (Exception e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Error Delete: " + e.getMessage());
+        }
+    }
+    }//GEN-LAST:event_deleteActionPerformed
+
+    private void roleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_roleActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_roleActionPerformed
+
+    private void old_passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_old_passwordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_old_passwordActionPerformed
+
+    private void updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateActionPerformed
+        int selectedRow = table_user.getSelectedRow();
+    if (selectedRow == -1) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Pilih user di tabel dulu!");
+        return;
+    }
+
+    String targetUser = table_user.getValueAt(selectedRow, 1).toString();
+    String passLama = table_user.getValueAt(selectedRow, 2).toString(); // Ambil pass lama dari tabel
+    String passInput = new_password.getText();
+    String roleBaru = role.getSelectedItem().toString();
+
+    // LOGIKA: Jika input kosong, pakai pass lama. Jika ada isinya, pakai pass baru.
+    String passFinal = passInput.isEmpty() ? passLama : passInput;
+
+    try {
+        java.util.List<String> semuaData = java.nio.file.Files.readAllLines(java.nio.file.Paths.get("src/akun/akun.txt"));
+        java.io.PrintWriter pw = new java.io.PrintWriter(new java.io.FileWriter("src/akun/akun.txt"));
+
+        for (String baris : semuaData) {
+            String[] d = baris.split(",");
+            if (d[0].equals(targetUser)) {
+                // Gunakan passFinal (bisa pass lama atau baru)
+                pw.println(d[0] + "," + passFinal + "," + roleBaru);
+            } else {
+                pw.println(baris);
+            }
+        }
+        pw.close();
+        
+        javax.swing.JOptionPane.showMessageDialog(this, "Update Berhasil! (Password " + (passInput.isEmpty() ? "Tetap" : "Berubah") + ")");
+        new_password.setText(""); // Bersihkan field setelah update
+        tampilData(); 
+    } catch (Exception e) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Error Update: " + e.getMessage());
+    }
+    }//GEN-LAST:event_updateActionPerformed
+
+    private void table_userMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_userMouseClicked
+    int row = table_user.getSelectedRow();
+    
+    // Ambil password (kolom 2) ke textfield old_password
+    old_password.setText(table_user.getValueAt(row, 2).toString());
+    
+    // Ambil role (kolom 3) dan set ke JComboBox
+    String roleUser = table_user.getValueAt(row, 3).toString();
+    role.setSelectedItem(roleUser.toLowerCase()); // Memastikan case-sensitive cocok dengan model combo box
+    }//GEN-LAST:event_table_userMouseClicked
+
+    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
+       new login().setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_logoutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -85,11 +323,24 @@ public class dasboard extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new dasboard().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new dasboard_admin().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel admin_username;
+    private javax.swing.JButton delete;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton logout;
+    private javax.swing.JTextField new_password;
+    private javax.swing.JTextField old_password;
+    private javax.swing.JComboBox<String> role;
+    private javax.swing.JTable table_user;
+    private javax.swing.JButton update;
     // End of variables declaration//GEN-END:variables
 }

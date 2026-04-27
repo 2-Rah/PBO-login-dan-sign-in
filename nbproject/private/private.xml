@@ -3,11 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/G:/KULI%20AH/java/tugas001/src/page/register.java</file>
-            <file>file:/G:/KULI%20AH/java/tugas001/src/page/dasboard.java</file>
             <file>file:/G:/KULI%20AH/java/tugas001/src/page/main.java</file>
-            <file>file:/G:/KULI%20AH/java/tugas001/src/akun/akun.txt</file>
             <file>file:/G:/KULI%20AH/java/tugas001/src/page/login.java</file>
+            <file>file:/G:/KULI%20AH/java/tugas001/src/page/register.java</file>
+            <file>file:/G:/KULI%20AH/java/tugas001/src/page/Akun.java</file>
+            <file>file:/G:/KULI%20AH/java/tugas001/src/page/dasboard.java</file>
+            <file>file:/G:/KULI%20AH/java/tugas001/src/page/dasboard_admin.java</file>
         </group>
     </open-files>
 </project-private>

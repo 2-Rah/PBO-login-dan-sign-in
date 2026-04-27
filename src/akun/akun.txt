@@ -1,3 +1,4 @@
-turah,turah
-123,123
-admin,123
+turah,turah,Admin
+123,123,User
+admin,admin,admin
+user,user,user
